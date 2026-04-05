@@ -1,23 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import * as cheerio from 'cheerio'
 
-// Sites known to block scraping
-const BLOCKED_SITES = ['indeed.com', 'linkedin.com', 'naukri.com', 'monster.com']
 
 export async function POST(req: NextRequest) {
     const { url, title } = await req.json()
 
     try {
         if (url) {
-            const isBlocked = BLOCKED_SITES.some(site => url.includes(site))
-            if (isBlocked) {
-                return NextResponse.json({
-                    error: null,
-                    blocked: true,
-                    message: `This site blocks automated scraping. Please copy the job description text and paste it manually.`,
-                })
-            }
-
             const res = await fetch(url, {
                 headers: {
                     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36',

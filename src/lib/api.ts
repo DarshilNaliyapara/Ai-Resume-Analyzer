@@ -23,14 +23,12 @@ const BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'
 
 const api = axios.create({ baseURL: BASE })
 
-// Attach token to every request
 api.interceptors.request.use((config) => {
   const token = getAccessToken()
   if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 })
 
-// Flag to prevent multiple simultaneous refresh attempts
 let isRefreshing = false
 let failedQueue: Array<{ resolve: (val: any) => void; reject: (err: any) => void }> = []
 
@@ -44,21 +42,18 @@ api.interceptors.response.use(
   async (error) => {
     const original = error.config
 
-    // Only handle 401 and only once per request
     if (error.response?.status !== 401 || original._retry) {
       return Promise.reject(error)
     }
 
     const refresh = getRefreshToken()
     if (!refresh) {
-      // No refresh token at all — must login
       clearTokens()
       window.location.href = '/login'
       return Promise.reject(error)
     }
 
     if (isRefreshing) {
-      // Another request already refreshing — queue this one
       return new Promise((resolve, reject) => {
         failedQueue.push({ resolve, reject })
       }).then(token => {

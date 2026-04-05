@@ -1,20 +1,39 @@
 'use client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { getAccessToken } from '@/lib/api'
 
 export default function Home() {
   const router = useRouter()
+  const [checking, setChecking] = useState(true)
 
   useEffect(() => {
-    if (getAccessToken()) router.replace('/dashboard')
+    if (getAccessToken()) {
+      router.replace('/dashboard')
+    } else {
+      setChecking(false)
+    }
   }, [router])
+
+  if (checking) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-bg">
+        <div className="animate-fade-up text-center">
+          <div className="animate-spin-sm w-6 h-6 border border-border border-t-white rounded-full mx-auto mb-5" />
+          <p className="font-display font-bold text-white text-lg tracking-tight mb-1">
+            Redirecting to dashboard
+          </p>
+          <p className="font-mono text-sm text-muted">taking you back...</p>
+        </div>
+      </main>
+    )
+  }
 
   return (
     <main className="min-h-screen flex flex-col bg-bg text-text">
       <nav className="animate-fade-in flex justify-between items-center px-5 md:px-8 py-5 border-b border-border">
-        <span className="font-display font-extrabold text-md md:text-base text-white tracking-tight">
+        <span className="font-display font-extrabold text-sm md:text-base text-white tracking-tight">
           RESUME ANALYZER
         </span>
         <div className="flex gap-2 md:gap-3">

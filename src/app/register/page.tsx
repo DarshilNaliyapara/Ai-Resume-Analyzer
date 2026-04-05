@@ -17,7 +17,6 @@ export default function Register() {
         e.preventDefault()
         setError('')
 
-        // Client-side password match check
         if (form.password !== form.confirmPassword) {
             setError('Passwords do not match.')
             return
@@ -103,7 +102,6 @@ export default function Register() {
                         className="w-full px-4 py-3 bg-surface border border-border rounded text-white placeholder-muted outline-none focus:border-border-hover transition-colors"
                     />
 
-                    {/* Password with match indicator */}
                     <div className="relative">
                         <input
                             type={showPassword1 ? 'text' : 'password'} placeholder="password (min 8 chars)" required minLength={8}
@@ -160,7 +158,6 @@ export default function Register() {
                         )}
                     </div>
 
-                    {/* Password match message */}
                     {passwordsMismatch && (
                         <p className="font-mono text-sm text-score-red -mt-1">
                             Passwords do not match
